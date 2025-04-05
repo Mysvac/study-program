@@ -1,0 +1,12 @@
+build/
+out/
+
+.vscode/
+.vs/
+.idea/
+
+**/.qmlls.ini
+
+CMakeLists.txt.user
+CMakeUserPresets.json
+CMakeCache.txt
