@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>小小杂货铺-管理</title>
+
+    <link href="/style/goods_manage_page.css" rel="stylesheet">
+    <script src="/scripts/goods_manage_page.js" defer></script>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li class="logo"><a href="/">小小杂货铺</a></li>
+            <li><a href="/page/classify">分类</a></li>
+            <li><a href="/page/bill">订单</a></li>
+            <li><a href="/page/cart">购物车</a></li>
+            <li class="account"><a id="a_uid" href="/page/profile" th:text="${uid == null ? '登录' : uid }"></a></li>
+            <li class="search">
+                <form action="/page/search" method="get">
+                    <input id="search-input" type="text" placeholder="搜索商品..." name="info"/>
+                    <input id="search-button" type="submit" value="搜索"/>
+                </form>
+            </li>
+            <li class="manage" th:if="${grade == 'admin'}"><a href="/page/management">管理网站</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <ul>
+                <li id="bill-management-btn" class="sidebar-item"><a href="/page/management">账单查询</a></li>
+                <li id="order-management-btn" class="sidebar-item"><a href="/page/manage-orders">订单处理</a></li>
+                <li id="goods-management-btn" class="sidebar-item"><a href="/page/manage-goodsList">商品管理</a></li>
+                <li id="user-management-btn" class="sidebar-item"><a href="/page/manage-users">用户管理</a></li>
+                <li id="ad-management-btn" class="sidebar-item"><a href="/page/manage-ad">广告管理</a></li>
+            </ul>
+        </div>
+
+        <!-- 右侧内容区域 -->
+        <div class="content">
+            <div class="search-div">
+                <form class="search-div" method="get" action="/page/manage-goodsList">
+                    <input id="search" class="search" name="search" type="text" placeholder="根据编号或商品名查询...">
+                    <input class="submit" type="submit" value="搜索">
+                </form>
+            </div>
+            <div th:if="${#lists.isEmpty(goodsList)}">
+                <p>暂无商品</p>
+            </div>
+            <div class="a-goods" th:each="goods : ${goodsList}">
+                <div class="profile">
+                    <h5 th:text="'商品编号：'+${goods.goodsid}">Goods Title</h5>
+                    <p th:text="'商品名：'+${goods.goodsname}">Goods Name</p>
+                    <p th:text="'作者：'+${goods.author}">author</p>
+                </div>
+
+                <div  class="money">
+                    <p th:text="'类型：'+${goods.goodstype}">type</p>
+                    <div>
+                        单价(分)：
+                        <input class="price-input" type="number" th:value="${goods.price}">
+                    </div>
+                    <div>
+                        库存：
+                        <input class="stock-input" type="number" th:value="${goods.stock}">
+                    </div>
+                </div>
+                <button class="update-goods"  th:data-goodsid="${goods.goodsid}" >修改</button>
+                <button class="delete-goods"  th:data-goodsid="${goods.goodsid}" >删除</button>
+                <button class="buy-able" th:data-goodsid="${goods.goodsid}" th:text="${goods.available==1 ? '销售中' : '停售中'}"
+                th:style="${goods.available==1 ? '' : 'background-color: red;'}">销售中</button>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 小小杂货铺 | 仅供学习测试使用</p>
+</footer>
+</body>
+</html>

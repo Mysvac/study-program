@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>小小杂货铺-登入</title>
+    <link href="/style/sign_in.css" rel="stylesheet">
+    <script src="/scripts/sign_in.js" defer></script>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <form class="login-form">
+            <h2>小小杂货铺-登录</h2>
+
+            <div class="input-group">
+                <label for="uid">账号：</label>
+                <input type="text" id="uid" name="uid" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">密码：</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="register-info">
+                <p>登入自动注册</p>
+            </div>
+
+            <div class="submit-group">
+                <button id="submit" type="submit">提交</button>
+            </div>
+            <div th:text="${error}" class="error_message"></div>
+        </form>
+    </div>
+
+</body>
+</html>

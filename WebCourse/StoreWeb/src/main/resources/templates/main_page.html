@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>小小杂货铺</title>
+
+    <link href="/style/main_page.css" rel="stylesheet">
+    <script src="/scripts/insert-cart.js" defer></script>
+
+    <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+    <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/enc-utf8.min.js"></script>
+    <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/enc-hex.min.js"></script>
+    <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha256.min.js"></script>
+    <script th:if="${AdEnable!=null && AdEnable == true}" src="/scripts/ad.js" defer></script>
+    <meta th:id="'AdLocation'" th:if="${AdEnable!=null && AdEnable == true}" th:content="${AdLocation}">
+
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li class="logo"><a href="/">小小杂货铺</a></li>
+            <li><a href="/page/classify">分类</a></li>
+            <li><a href="/page/bill">订单</a></li>
+            <li><a href="/page/cart">购物车</a></li>
+            <li class="account"><a id="a_uid" href="/page/profile" th:text="${uid == null ? '登录' : uid }"></a></li>
+            <li class="search">
+                <form action="/page/search" method="get">
+                    <input id="search-input" type="text" placeholder="搜索商品..." name="info"/>
+                    <input id="search-button" type="submit" value="搜索"/>
+                </form>
+            </li>
+            <li class="manage" th:if="${grade == 'admin'}"><a href="/page/management">管理网站</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="banner">
+        <h1>欢迎来到小小杂货铺</h1>
+        <p>探索各种商品，找到你喜欢的内容！</p>
+    </section>
+
+    <section class="goods-list">
+        <h2>畅销商品</h2>
+
+        <div class="goodsList">
+            <div th:if="${#lists.isEmpty(goodsList)}">
+                <p>未找到相关商品</p>
+            </div>
+            <div class="goods" th:each="goods : ${goodsList}">
+                <a th:href="'/page/info'+'?'+'goodsid='+${goods.goodsid}">
+                    <img class="goods-image" th:src="@{/images/goods/{goodsname}.png(goodsname=${goods.goodsname})}" th:alt="${goods.goodsname}">
+                    <h3 th:text="${goods.goodsname}">Goods Title</h3>
+                </a>
+                <p th:text="'作者: ' + ${goods.author}">Author Name</p>
+                <p th:if="${goods.available==0}" style="color: darkred">停售！</p>
+                <p th:if="${goods.available==1}" class="price" th:text="'￥' + ${goods.price/100} + '.' + ${goods.price%100}">Price</p>
+                <button class="insert-to-cart" th:data-goodsid="${goods.goodsid}">加入购物车</button>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 小小杂货铺 | 仅供学习测试使用</p>
+</footer>
+</body>
+</html>

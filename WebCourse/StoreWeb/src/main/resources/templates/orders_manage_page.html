@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>小小杂货铺-管理</title>
+
+  <link href="/style/orders_manege_page.css" rel="stylesheet">
+  <script src="/scripts/orders_manage_page.js" defer></script>
+</head>
+<body>
+<header>
+  <nav>
+    <ul>
+      <li class="logo"><a href="/">小小杂货铺</a></li>
+      <li><a href="/page/classify">分类</a></li>
+      <li><a href="/page/bill">订单</a></li>
+      <li><a href="/page/cart">购物车</a></li>
+      <li class="account"><a id="a_uid" href="/page/profile" th:text="${uid == null ? '登录' : uid }"></a></li>
+      <li class="search">
+        <form action="/page/search" method="get">
+          <input id="search-input" type="text" placeholder="搜索商品..." name="info"/>
+          <input id="search-button" type="submit" value="搜索"/>
+        </form>
+      </li>
+      <li class="manage" th:if="${grade == 'admin'}"><a href="/page/management">管理网站</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="container">
+    <!-- 左侧导航栏 -->
+    <div class="sidebar">
+      <ul>
+        <li id="bill-management-btn" class="sidebar-item"><a href="/page/management">账单查询</a></li>
+        <li id="order-management-btn" class="sidebar-item"><a href="/page/manage-orders">订单处理</a></li>
+        <li id="goods-management-btn" class="sidebar-item"><a href="/page/manage-goodsList">商品管理</a></li>
+        <li id="user-management-btn" class="sidebar-item"><a href="/page/manage-users">用户管理</a></li>
+        <li id="ad-management-btn" class="sidebar-item"><a href="/page/manage-ad">广告管理</a></li>
+      </ul>
+    </div>
+
+    <!-- 右侧内容区域 -->
+    <div class="content">
+      <div class="search-div">
+        <form class="search-div" method="get" action="/page/manage-orders">
+          <input id="search" class="search" name="search" type="text"  placeholder="根据订单/用户/商品号查询...">
+          <input class="submit" type="submit" value="搜索">
+        </form>
+      </div>
+      <div th:if="${#lists.isEmpty(orders)}">
+        <p>空</p>
+      </div>
+      <div class="bill" th:each="bill : ${orders}">
+        <div class="profile">
+          <h5 th:text="'订单号：'+${bill.billid}">billid</h5>
+          <p th:text="'商品编号：'+${bill.goodsid}">Goods Title</p>
+          <p th:text="'商品名：'+${bill.goodsname}"></p>
+        </div>
+
+        <div  class="money">
+          <p th:text="'购买者：'+${bill.uid}"></p>
+          <p th:text="'数量：' + ${bill.amount}">amount</p>
+          <p class="sum-price" th:text="'总价：￥' + ${bill.sumprice/100} + '.' + ${bill.sumprice%100}">Sum Price</p>
+        </div>
+        <div class="money">
+          <p th:if="${bill.status == 'ongoing'}">处理中</p>
+          <p th:if="${bill.status == 'finish'}">已完成</p>
+          <p th:if="${bill.status == 'suspend'}">已中止</p>
+        </div>
+        <div th:if="${bill.status == 'ongoing'}">
+          <button class="suspend-btn" th:if="${bill.status == 'ongoing'}" th:data-billid="${bill.billid}">取消订单</button>
+          <button class="finish-btn" th:if="${bill.status == 'ongoing'}" th:data-billid="${bill.billid}">确认收货</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2024 小小杂货铺 | 仅供学习测试使用</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,347 @@
+/* 确保所有文本在页面上固定显示 */
+body {
+    font-family: Arial, sans-serif;  /* 设置统一字体 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh; /* 页面高度填满整个视口 */
+    background-color: #f4f4f4;
+}
+
+h1 {
+    width: 80%;
+    margin: 0 auto; /* 使内容水平居中 */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
+
+/* 详情页标题 */
+.news-detail h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px; /* 标题与内容之间的间距 */
+    text-align: center;
+}
+
+/*!* 隐藏 h1 标签，仅在详情页 *!*/
+/*body.news-detail-page h1 {*/
+/*    display: none;*/
+/*}*/
+
+.news-detail {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
+
+.detail-date {
+    text-align: center;
+    font-size: 1rem;
+    color: #666;
+}
+.news-content {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+    overflow: hidden; /* 防止内容溢出 */
+    text-indent: 2em; /* 段首缩进 */
+}
+
+.news-preview {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
+
+h1 a {
+    text-decoration: none;  /* 去掉下划线 */
+    color: inherit;         /* 使链接的颜色继承父元素颜色 */
+}
+
+.news-date {
+    font-size: 1rem;
+    color: #666;
+}
+ .news-author {
+     text-align: right;
+     font-size: 1rem;
+     color: #666;
+     margin-top: 10px;
+ }
+
+/* 为新闻列表标题添加样式 */
+.news-title {
+    background-color: #555555;
+    max-width: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: -webkit-box;        /* 启用弹性盒模型 */
+    -webkit-line-clamp: 1;       /* 限制为显示 1 行 */
+    -webkit-box-orient: vertical;/* 设置文本排列方向为纵向 */
+    overflow: hidden;            /* 隐藏超出容器范围的文本 */
+    text-overflow: ellipsis;     /* 显示省略号 (...) */
+    line-height: 1.6;            /* 确保文本行间距合理 */
+    height: 2rem;              /* 根据字体大小调整容器高度 */
+}
+
+
+.news-title:hover {
+    text-decoration: underline;
+}
+
+/*新闻预览样式*/
+.news-preview {
+    width: 100%;
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/*装了预览文本和图片*/
+.pre-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/*新闻预览文本*/
+.news-summary {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    display: -webkit-box;
+    margin-top: 1.6em;
+    -webkit-line-clamp: 4;  /* 显示前4行 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;  /* 隐藏超出范围的文本 */
+}
+
+/*新闻预览图片*/
+.news-preview img {
+    display: block;
+    width: 270px;      /* 设置宽度为固定值 */
+    height: 180px;     /* 设置高度为固定值，确保为正方形 */
+    object-fit: cover; /* 保持图片比例并裁剪多余的部分 */
+    border-radius: 8px; /* 设置圆角 */
+}
+
+/*详情页图片*/
+.news-detail img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;   /* 自适应宽度 */
+    height: auto;      /* 保持比例 */
+    max-height: 400px; /* 限制最大高度 */
+}
+
+/*隐藏新闻标签类型，用于个性化推送广告*/
+#goods_type {
+    position: absolute;
+    background-color: transparent;
+    opacity: 0;  /*设置透明度为 0，完全透明 */
+}
+
+/* 导航栏 */
+.navbar {
+    width: 100%;
+    background-color: #555555;
+    color: white;
+    padding: 10px 0;
+    position: relative; /* 确保导航栏可见 */
+    z-index: 999;  /* 增加 z-index 确保导航栏在其他元素上方 */
+}
+
+.navbar ul {
+    list-style-type: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+.navbar ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 14px 20px;
+}
+.navbar ul li a:hover {
+    text-decoration: underline;
+}
+
+
+.news-title:hover, .navbar ul li a:hover {
+    background-color: #333333;  /* 鼠标悬停时变暗 */
+}
+
+/* 搜索框样式 */
+form {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/*表单样式*/
+form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+.error-message {
+    color: red;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+/* 主页面背景图片 */
+body:not(.news-detail-page) {
+    background-image: url('https://p8.itc.cn/q_70/images03/20230618/5e4e2977d0194d6aa6c4710668c6b29a.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    text-align: left; /* 向左对齐 */
+    background-color: #3e8e41;  /* 绿色背景 */
+    color: #fff;
+    padding: 20px 0 20px 30px;
+    margin: 0;
+    font-size: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 链接样式 */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 新闻详情页的文字部分背景为白色 */
+.news-detail {
+    background-color: #fff; /* 设置背景色为白色 */
+    padding: 20px; /* 为内容添加内边距，防止内容紧贴边缘 */
+    border-radius: 8px; /* 设置圆角效果 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影，使背景看起来有层次感 */
+    width: 80%; /* 设置宽度为80%，使其居中 */
+    max-width: 1000px; /* 设置最大宽度 */
+    margin: 20px auto; /* 上下外边距20px，水平居中 */
+}
+
+/* 新闻详情页面的背景图片 */
+body.news-detail-page {
+    background-image: url('https://www.usst.edu.cn/_upload/column/03/99/921/picture.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+/* 新闻详情中的文字部分的字体和行高 */
+.news-detail p {
+    font-size: 16px; /* 设置文字大小 */
+    line-height: 1.6; /* 设置行高，增加可读性 */
+    color: #555; /* 设置文字颜色 */
+}
+
+/* 响应式布局，适应小屏幕 */
+@media screen and (max-width: 768px) {
+    .news-preview {
+        width: 90%;
+    }
+
+    form input[type="text"] {
+        width: 80%;
+    }
+
+    .navbar ul li {
+        float: none;
+        text-align: center;
+    }
+
+    .navbar ul li a {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+}
+
+/*登录操作样式*/
+.login-link {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 1.2rem;
+    color: #555555;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+}
+.login-link:hover {
+    background-color: #333333;
+    color: white;
+}
+
+.logout-link {
+    position: absolute;
+    top: 10px;
+    right: 100px;  /* 让注销按钮显示在登录按钮的左侧 */
+    font-size: 1.2rem;
+    color: #555555;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+}
+.logout-link:hover {
+    background-color: #333333;
+    color: white;
+}

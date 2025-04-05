@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>小小杂货铺-分类</title>
+
+  <link href="/style/classify-page.css" rel="stylesheet">
+
+
+  <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+  <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/enc-utf8.min.js"></script>
+  <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/enc-hex.min.js"></script>
+  <script th:if="${AdEnable!=null && AdEnable == true}" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha256.min.js"></script>
+  <script th:if="${AdEnable!=null && AdEnable == true}" src="/scripts/ad.js" defer></script>
+  <meta th:id="'AdLocation'" th:if="${AdEnable!=null && AdEnable == true}" th:content="${AdLocation}">
+
+</head>
+<body>
+<header>
+  <nav>
+    <ul>
+      <li class="logo"><a href="/">小小杂货铺</a></li>
+      <li><a href="/page/classify">分类</a></li>
+      <li><a href="/page/bill">订单</a></li>
+      <li><a href="/page/cart">购物车</a></li>
+      <li class="account"><a id="a_uid" href="/page/profile" th:text="${uid == null ? '登录' : uid }"></a></li>
+      <li class="search">
+        <form action="/page/search" method="get">
+          <input id="search-input" type="text" placeholder="搜索商品..." name="info"/>
+          <input id="search-button" type="submit" value="搜索"/>
+        </form>
+      </li>
+      <li class="manage" th:if="${grade == 'admin'}"><a href="/page/management">管理网站</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+<main>
+  <section class="goods-list">
+    <h2>分类</h2>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/食品饮料.png" alt="食品饮料">
+      </div>
+      <div class="category-info">
+        <h3>食品饮料</h3>
+        <p>各种零食和饮料...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=食品饮料"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/电子产品.png" alt="电子产品">
+      </div>
+      <div class="category-info">
+        <h3>电子产品</h3>
+        <p>家电，外设，计算机...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=电子产品"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/家居用品.png" alt="家居用品">
+      </div>
+      <div class="category-info">
+        <h3>家居用品</h3>
+        <p>家居，座椅，工具，餐巾纸...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=家居用品"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/服装服饰.png" alt="服装服饰">
+      </div>
+      <div class="category-info">
+        <h3>服装服饰</h3>
+        <p>服装，鞋帽，围巾...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=服装服饰"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/美妆护肤.png" alt="美妆护肤">
+      </div>
+      <div class="category-info">
+        <h3>美妆护肤</h3>
+        <p>化妆，护肤，保湿，面膜...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=美妆护肤"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/汽车交通.png" alt="汽车交通">
+      </div>
+      <div class="category-info">
+        <h3>汽车交通</h3>
+        <p>学生自行车，电动车，平衡车...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=汽车交通"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+
+    <div class="category-item">
+      <div class="category-image">
+        <img src="/images/旅游出行.png" alt="旅游出行">
+      </div>
+      <div class="category-info">
+        <h3>旅游出行</h3>
+        <p>雨伞雨衣，帐篷睡袋，登山杖...</p>
+      </div>
+      <div class="category-button">
+        <a href="/page/search?info=旅游出行"><button class="search">查看详情</button></a>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+
+<footer>
+  <p>&copy; 2024 小小杂货铺 | 仅供学习测试使用</p>
+</footer>
+</body>
+</html>
