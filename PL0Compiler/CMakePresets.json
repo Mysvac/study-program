@@ -1,0 +1,77 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+      "major": 4,
+      "minor": 0,
+      "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "ninja-base-config",
+            "hidden": true,
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/",
+            "installDir": "${sourceDir}/build/"
+        },
+        {
+            "name": "x64-base-config",
+            "hidden": true,
+            "inherits": "ninja-base-config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "linux-base-config",
+            "hidden": true,
+            "inherits": "ninja-base-config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "macos-base-config",
+            "hidden": true,
+            "inherits": "ninja-base-config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "ninja-base-debug",
+            "hidden": true,
+            "displayName": "build debug model",
+            "configurePreset": "ninja-base-config",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ninja-base-release",
+            "hidden": true,
+            "displayName": "build release model",
+            "configurePreset": "ninja-base-config",
+            "configuration": "Release"
+        }
+    ]
+}
