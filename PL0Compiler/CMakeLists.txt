@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 4.0.0)
 # 可以做在https://github.com/Kitware/CMake/blob/master/Help/dev/experimental.rst查看最新代码
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "a9e1cf81-9932-4810-974b-6eccaf14e457")
 
-project(module-test LANGUAGES CXX)
+project(plzc LANGUAGES CXX)
 
 # 设置C++标准
 set(CMAKE_CXX_MODULE_STD ON)

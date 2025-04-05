@@ -1,53 +1,76 @@
 import std;
 import PLZero;
 
-auto main(int argc, char* argv[]) ->int {
-    bool have_input = false;
-    bool have_output = false;
 
+int main(int argc, char* argv[]) {
     // 存储源文件和目标文件路径
     std::string input_file;
     std::string output_file;
 
-    // 读取源文件和目标文件路径
+    ///////////////////////////////////////////////////////////////////
+    //// 读取命令行参数（源文件和目标文件）。
     for(int i = 1; i<argc; ++i){
-        if(std::string {argv[i]} == "-i"){
-            ++i;
-            if(i >= argc) return 1;
-            have_input = true;
+        if(!std::strcmp(argv[i], "-i")){
+            // -i 表示 input 输入文件
+            if( ++i >= argc) break;
             input_file = argv[i];
         }
-        else if(std::string {argv[i]} == "-o"){
-            ++i;
-            if(i >= argc) return 1;
-            have_output = true;
+        else if(!std::strcmp(argv[i], "-o")){
+            // -o 表示 output 输出文件
+            if( ++i >= argc) break;
             output_file = argv[i];
         }
-        else{
-            if(!have_input){
-                have_input = true;
-                input_file = argv[i];
-            }
-            else{
-                have_output = true;
-                output_file = argv[i];
-            }
+        else if(input_file.empty()) input_file = argv[i]; // 支持省略-i 直接写输入文件
+        else if(output_file.empty()) output_file = argv[i]; // 支持省略-o 直接写输出文件
+    }
+    if(input_file.empty()){
+        std::cerr << "请使用 -i 指定源文件， 使用 -o 指定目标文件（可省略）。" << std::endl;
+        return 1;
+    }
+    // 输出文件可以省略，默认为output.txt
+    if(output_file.empty()) output_file = "output.txt";
+    ///////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////
+    //// 开启文件读取流
+    PLZero::PlzCompiler compiler(input_file,output_file);
+    if(!compiler.is_open()){
+        std::cerr << "无法打开源文件：" << input_file << std::endl;
+        return 1;
+    }
+    ///////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////
+    //// 语法语义分析 与 目标代码生产
+    try{
+        compiler.compile();
+    }
+    catch(const std::exception& e){
+        ///////////////////////////////////////////////////////////////////
+        //// 错误处理，输出错误报告
+        try{
+            // 删除生成失败的文件
+            std::filesystem::remove(output_file);
         }
-        if(have_input && have_output) break;
+        catch(...){}
+        std::cerr << "====================================================" << std::endl;
+        std::cerr << "编译失败：" << std::endl;
+        std::cerr << e.what() << std::endl;
+        std::cerr << "====================================================" << std::endl;
+        return 1;
+        ///////////////////////////////////////////////////////////////////
     }
-    if(have_input && !have_output){
-        output_file = "output.txt";
-    }
-    else return 1;
+    ///////////////////////////////////////////////////////////////////
 
-    // 开启词法分析器
-    PLZero::Lexer lexer;
-    lexer.open(input_file);
+    std::cout << "====================================================" << std::endl;
+    std::cout << "编译成功！" << std::endl;
+    std::cout << "目标文件：" << output_file << std::endl;
+    std::cout << "====================================================" << std::endl;
+    
+    return 0;
 
-    while(true){
-        PLZero::Token token = lexer.getToken();
-        if(token.type == PLZero::TokenType::NUMBER) std::println("{}", token.val);
-        else std::println("{}", token.name);
-        if(token.type==PLZero::TokenType::POINT) break;
-    }
 }
+
+
