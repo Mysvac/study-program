@@ -1,0 +1,32 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+      "major": 4,
+      "minor": 0,
+      "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "x64-config",
+            "inherits": "x64-base-config",
+            "displayName": "x64-config",
+            "warnings": {
+                "dev": false
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "x64-debug",
+            "displayName": "x64-build-debug",
+            "configurePreset": "x64-config",
+            "configuration": "Debug"
+        },
+        {
+            "name": "x64-release",
+            "displayName": "x64-build-release",
+            "configurePreset": "x64-config",
+            "configuration": "Release"
+        }
+    ]
+}

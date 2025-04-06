@@ -6,11 +6,15 @@ int main(int argc, char* argv[]) {
     // 存储源文件和目标文件路径
     std::string input_file;
     std::string output_file;
+    bool add_comment = false;
 
     ///////////////////////////////////////////////////////////////////
     //// 读取命令行参数（源文件和目标文件）。
     for(int i = 1; i<argc; ++i){
-        if(!std::strcmp(argv[i], "-i")){
+        if(!std::strcmp(argv[i], "-c")){
+            add_comment = true; // 目标文件是否用 # 注释分割block作用域
+        }
+        else if(!std::strcmp(argv[i], "-i")){
             // -i 表示 input 输入文件
             if( ++i >= argc) break;
             input_file = argv[i];
@@ -35,6 +39,7 @@ int main(int argc, char* argv[]) {
     ///////////////////////////////////////////////////////////////////
     //// 开启文件读取流
     PLZero::PlzCompiler compiler(input_file,output_file);
+    compiler.set_comment(add_comment);
     if(!compiler.is_open()){
         std::cerr << "无法打开文件." << std::endl;
         return 1;
