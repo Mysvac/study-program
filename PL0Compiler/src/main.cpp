@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     //// 开启文件读取流
     PLZero::PlzCompiler compiler(input_file,output_file);
     if(!compiler.is_open()){
-        std::cerr << "无法打开源文件：" << input_file << std::endl;
+        std::cerr << "无法打开文件." << std::endl;
         return 1;
     }
     ///////////////////////////////////////////////////////////////////
@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
         compiler.compile();
     }
     catch(const std::exception& e){
+        compiler.close();
         ///////////////////////////////////////////////////////////////////
         //// 错误处理，输出错误报告
         try{
@@ -55,6 +56,7 @@ int main(int argc, char* argv[]) {
             std::filesystem::remove(output_file);
         }
         catch(...){}
+        // 打印错误报告
         std::cerr << "====================================================" << std::endl;
         std::cerr << "编译失败：" << std::endl;
         std::cerr << e.what() << std::endl;
@@ -63,14 +65,14 @@ int main(int argc, char* argv[]) {
         ///////////////////////////////////////////////////////////////////
     }
     ///////////////////////////////////////////////////////////////////
-
+    
+    // close()自带关闭检查，不会重复关闭
+    compiler.close();
     std::cout << "====================================================" << std::endl;
     std::cout << "编译成功！" << std::endl;
     std::cout << "目标文件：" << output_file << std::endl;
     std::cout << "====================================================" << std::endl;
     
-    return 0;
-
 }
 
 

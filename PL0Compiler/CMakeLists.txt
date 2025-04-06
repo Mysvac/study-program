@@ -20,6 +20,7 @@ FILE(GLOB src_files LIST_DIRECTORIES FALSE src/*.cpp)
 FILE(GLOB module_files LIST_DIRECTORIES FALSE modules/*.ixx)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
+# 注意，只有开头声明了是模块分区或模块接口的文件，才使用CXX_MODULES文件集，主函数显然不是
 target_sources(${PROJECT_NAME}
 PRIVATE
     FILE_SET cxx_modules TYPE CXX_MODULES FILES ${module_files}
