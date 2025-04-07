@@ -4,22 +4,26 @@
 
 尝试使用试验性 C++23 标准模块。
 
+## 编译器程序
+
+代码文件：`src/main.cpp` 和 `modules/PLZero.ixx`
+
 可执行程序在 ./build/Debug/plzc.exe
 
-plzc = PL Zero Compiler
+注：plzc = PL Zero Compiler
 
-使用方式：
+编译器使用方式：
 ```shell
 plzc.exe -i 输入文件路径 -o 输出文件路径 -c
 
-# '-c' 表示输出文件添加注释，可以省略
+# '-c' 表示为输出文件添加注释，可以省略
 # '-o 输出文件路径' 可以省略，默认输出到当前路径的 output.txt
 # '-i' 参数可以省略，但是必须有输入文件名
 # 最简命令如下：
 plzc.exe 输入文件路径
 ```
 
-输出命令说明
+目标程序命令说明（假想的栈式汇编命令）：
 - lit 0 a : 将常量（字面量）a存入栈顶
 - lod l a : 将变量l-a的值存入栈顶，l相对深度差，a偏移量
 - sto l a : 将栈顶存入 l-a， 同上
@@ -35,3 +39,14 @@ plzc.exe 输入文件路径
     - a=8~13 : 比较运算，分别对应 = != < > <= >=
 
 
+## 词法分析器测试程序
+由于实验要求，需要为词法分析法设定单独分析程序。
+
+代码文件：`lexer-src/main.cpp` 和 `modules/PLZero.ixx`
+
+可执行程序在 ./build/Debug/lexer.exe
+
+编译器使用方式（词法分析用于测试，只有输入文件，输出直接显示在控制台）：
+```shell
+plzc.exe 输入文件路径
+```
