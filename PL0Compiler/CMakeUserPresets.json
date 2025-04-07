@@ -10,6 +10,10 @@
             "name": "x64-config",
             "inherits": "x64-base-config",
             "displayName": "x64-config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
             "warnings": {
                 "dev": false
             }

@@ -19,11 +19,24 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 FILE(GLOB src_files LIST_DIRECTORIES FALSE src/*.cpp)
 FILE(GLOB module_files LIST_DIRECTORIES FALSE modules/*.ixx)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} ${src_files})
 # 注意，只有开头声明了是模块分区或模块接口的文件，才使用CXX_MODULES文件集，主函数显然不是
 target_sources(${PROJECT_NAME}
 PRIVATE
     FILE_SET cxx_modules TYPE CXX_MODULES FILES ${module_files}
+)
+
+
+
+
+FILE(GLOB lexer_src_files LIST_DIRECTORIES FALSE lexer-src/*.cpp)
+FILE(GLOB lexer_module_files LIST_DIRECTORIES FALSE modules/*.ixx)
+
+add_executable(lexer ${lexer_src_files})
+# 注意，只有开头声明了是模块分区或模块接口的文件，才使用CXX_MODULES文件集，主函数显然不是
+target_sources(lexer
+PRIVATE
+    FILE_SET lexer_cxx_modules TYPE CXX_MODULES FILES ${lexer_module_files}
 )
 
 

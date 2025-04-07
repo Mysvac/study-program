@@ -86,10 +86,6 @@ export namespace PLZero{
          * @brief 单词存储的值
          */
         long long val;
-        /**
-         * @brief 单词对应的行号
-         */
-        long long line;
     };
 
     /**
@@ -411,7 +407,6 @@ namespace PLZero{
         }
 
         Token res;
-        res.line = line;
         std::string str;
         str += sc;
         // 根据首字符类型，进行不同的处理
@@ -512,7 +507,7 @@ namespace PLZero{
             throw std::runtime_error {err_msg(lexer.getLine(),"未知错误，未以 . 符号结束解析。")};
         }
         // 调用主函数
-        std::println(ofs, "{:5} cal  {:3} {}", 1, 0, main_line);
+        std::println(ofs, "{:5} jmp  {:3} {}", 1, 0, main_line);
         ofs << totalBuffer.rdbuf();
         totalBuffer.clear();
         ofs.close();
