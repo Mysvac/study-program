@@ -18,7 +18,7 @@
 
 代码文件：`src/main.cpp` 和 `modules/PLZero.ixx`
 
-预编译好的程序在 `./build/bin/plzc.exe`<br>
+预编译好的程序在 `bin/plzc.exe`<br>
 此文件夹内还提供了几个测试源文件。
 
 注：plzc = PL Zero Compiler
@@ -55,7 +55,7 @@ plzc.exe 输入文件路径
 
 代码文件：`lexer-src/main.cpp` 和 `modules/PLZero.ixx`
 
-预编译好的程序在 `./build/bin/lexer.exe`<br>
+预编译好的程序在 `bin/lexer.exe`<br>
 此文件夹内还提供了几个测试源文件。
 
 编译器使用方式（词法分析用于测试，只有输入文件，输出直接显示在控制台）：
