@@ -25,7 +25,7 @@ export namespace PLZero{
 
     /**
      * @enum TokenType
-     * @brief 标识符的类别
+     * @brief 词的类别
      */
     enum class TokenType{
         CALL, /**< call */

@@ -12,6 +12,7 @@
 4. 使用Ninja作为生成器（只有ninja支持模块）。
 5. 使用MSVC作为编译器，必须是Visual Studio 2022 previw 的较新版本。
 6. linux下无法使用msvc，可尝试使用最新版本的Clang。（GCC尚不支持标准库模块。）
+7. vscode智能感知对模块支持不加，需要借助`.vscode/settings.json`中的`C_Cpp.default.compileCommands`参数才行
 
 ## 完整的编译器程序
 
