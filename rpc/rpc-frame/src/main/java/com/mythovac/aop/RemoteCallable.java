@@ -9,5 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) // 在运行时保留注解信息
 public @interface RemoteCallable {
     // 可以添加注解的属性，例如方法名等
-    String value() default "";
+    String url();
+    int port();
+    boolean enable() default true;
+    boolean report() default false;
 }

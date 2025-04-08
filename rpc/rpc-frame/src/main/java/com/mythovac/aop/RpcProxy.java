@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class RpcProxy {
     public static <T> T createProxy(Class<T> targetClass, T targetInstance) {
@@ -27,59 +29,46 @@ public class RpcProxy {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            System.out.print("proxy: ");
+            // 先检测有没有注解
             if (method.isAnnotationPresent(RemoteCallable.class)) {
-                System.out.println("remote");
-                // 获取注解的value值
                 RemoteCallable annotation = method.getAnnotation(RemoteCallable.class);
-                String remoteName = annotation.value().isEmpty() ? method.getName() : annotation.value();
-                // 如果方法被 @RemoteCallable 注解标记，执行远程调用逻辑
-                return callRemoteMethod(remoteName, method, args);
-            } else {
-                System.out.println("local");
-                // 否则直接调用目标方法
-                return method.invoke(target, args);
+                // 如果注解标记了需要报告，输出一下报告
+                if(annotation.report()) System.out.print("proxy: ");
+                if(!annotation.enable()){
+                    if(annotation.report()) System.out.println("local");
+                    return method.invoke(target, args);
+                }
+                if(annotation.report()) System.out.println("remote");
+                String url = annotation.url();
+                return callRemoteMethod(annotation.url(), annotation.port() , method, args);
             }
+            // 没有远程调用注解，直接本地执行
+            return method.invoke(target, args);
         }
 
-        private Object callRemoteMethod(String remoteName, Method method, Object[] args) {
-            // 构造JSON数据
-            StringBuilder jsonBuilder = new StringBuilder();
-            jsonBuilder.append("{");
-            jsonBuilder.append("\"methodName\":\"").append(method.getName()).append("\",");
-            jsonBuilder.append("\"type\":\"").append("need").append("\",");
-            jsonBuilder.append("\"args\":[");
-            // 将参数转换为字符串并添加到JSON中
-            for (int i = 0; i < args.length; i++) {
-                if (i > 0) {
-                    jsonBuilder.append(",");
-                }
-                jsonBuilder.append("\"").append(String.valueOf(args[i])).append("\"");
-            }
-            jsonBuilder.append("]");
-            jsonBuilder.append("}");
-            // 这里可以实现远程调用逻辑
-            String jsonData = jsonBuilder.toString();
-            // 远程服务器的IP地址和端口
+        private Object callRemoteMethod(String url, int port, Method method, Object[] args) {
+            // 转JSON数据
+            String jsonData = String.format(
+                "{\"name\":\"%s\",\"type\":\"request\",\"args\":[%s],\"note\":\"\",\"result\":\"\"}",
+                method.getName(),
+                args.length == 0 ? "" : Arrays.stream(args)
+                    .map(arg -> "\"" + String.valueOf(arg) + "\"")
+                    .collect(Collectors.joining(","))
+            );
 
-            int serverPort = 12345; // 替换为实际的服务器端口
-
-            try (Socket socket = new Socket(remoteName, serverPort);
+            // 创建socket
+            try (Socket socket = new Socket(url, port);
                  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
             ) {
                 // 发送JSON数据
                 out.println(jsonData);
 
-                // 接收返回值
-                String response = in.readLine();
-                System.out.println("Received response: " + response);
                 // 返回服务器的响应
-                return response;
+                return in.readLine();
 
             } catch (IOException e) {
-                e.printStackTrace();
-                return " { \"result\": \"Failed to call remote method\" } ";
+                return "Failed to call remote method";
             }
 
         }

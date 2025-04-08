@@ -1,13 +1,12 @@
 package com.mythovac.rpcclient;
 
-import com.mythovac.aop.RemoteCallable;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ClientFunc implements IClientFunc {
+public class Service implements IService {
+
     @Override
-    @RemoteCallable("1")
     public String fib(int n){
         if (n < 0) {
             return "请输入非负整数";
@@ -15,8 +14,8 @@ public class ClientFunc implements IClientFunc {
         int result = calculateFibonacci(n);
         return String.valueOf(result);
     }
+
     @Override
-    @RemoteCallable("1")
     public String sort(int[] array){
         if (array == null || array.length == 0) {
             return "请输入数组";
