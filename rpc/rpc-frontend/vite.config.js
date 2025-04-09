@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 18080,  // 设置端口
-    open: true   // 可选：自动打开浏览器
-  }
+    port: 18080,
+    open: true
+  },
 })
