@@ -39,7 +39,6 @@ public class RpcProxy {
                     return method.invoke(target, args);
                 }
                 if(annotation.report()) System.out.println("remote");
-                String url = annotation.url();
                 return callRemoteMethod(annotation.url(), annotation.port() , method, args);
             }
             // 没有远程调用注解，直接本地执行

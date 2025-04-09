@@ -17,7 +17,7 @@ try
     };
 
     // 3. 发送数据（UTF-8编码）
-    byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(dataModel));
+    byte[] data = JsonSerializer.SerializeToUtf8Bytes(dataModel);
     client.Send(data);
 
     // 3. 接收响应数据

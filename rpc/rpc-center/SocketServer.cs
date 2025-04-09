@@ -114,7 +114,7 @@ class SocketServer
             client.Connect(new IPEndPoint(IPAddress.Parse(url), port ?? 80));
 
             // 3. 发送数据（UTF-8编码）
-            byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
+            byte[] data = JsonSerializer.SerializeToUtf8Bytes(message);
             client.Send(data);
 
             // 3. 接收响应数据
