@@ -403,7 +403,7 @@ namespace PLZero{
         while( std::isspace(sc) ){
             if(sc == '\n') ++line;
             ifs.get(sc);
-            if(ifs.fail()) throw std::runtime_error {err_msg(line, "不完整的程序，未正常中止。")};
+            if(ifs.fail()) throw std::runtime_error {err_msg(line, "不完整的程序，未正常终止。")};
         }
 
         Token res;
@@ -414,7 +414,7 @@ namespace PLZero{
             // 首字符是数字 必然是 整数字面量
             while(true){
                 ifs.get(sc);
-                if(ifs.fail()) throw err_msg(line, "不完整的程序，未正常中止。");
+                if(ifs.fail()) throw err_msg(line, "不完整的程序，未正常终止。");
                 if(std::isdigit(sc)){
                     str += sc;
                     if(str.size() > MAX_NUMBER_SIZE){
@@ -648,7 +648,7 @@ namespace PLZero{
 
             token = lexer.getToken();
             if(token.type == TokenType::SEMICOLON) break;
-            else if(token.type != TokenType::COMMA) throw std::runtime_error {err_msg(lexer.getLine(),"const声明中存在未知符号：" + token.name)};
+            else if(token.type != TokenType::COMMA) throw std::runtime_error {err_msg(lexer.getLine(),"var声明中存在未知符号：" + token.name)};
         }
         return lexer.getToken();
     }
