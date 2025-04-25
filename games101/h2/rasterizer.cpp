@@ -112,8 +112,26 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
         t.setColor(1, col_y[0], col_y[1], col_y[2]);
         t.setColor(2, col_z[0], col_z[1], col_z[2]);
 
+
         rasterize_triangle(t);
     }
+
+
+
+    for(int i=0;i<width;++i){
+        for(int j=0;j<height;++j){
+            auto ind = (height-1-j)*width + i;
+            int idx1 = (height*2-1-(j*2))*width*2 + i*2;
+            int idx2 = (height*2-1-(j*2 + 1))*width*2 + i*2;
+            int idx3 = (height*2-1-(j*2))*width*2 + i*2 + 1;
+            int idx4 = (height*2-1-(j*2 + 1))*width*2 + i*2 + 1;
+            frame_buf[ind] = (super_frame_buf[idx1] + 
+                    super_frame_buf[idx2] + 
+                    super_frame_buf[idx3] + 
+                    super_frame_buf[idx4]) / 4.0f;
+        }
+    }
+
 }
 
 //Screen space rasterization
@@ -137,21 +155,29 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 
     // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
     
-    for(int i=(left+0.5);i<=right; ++i){
-        for(int j=(bottom+0.5);j<=top; ++j){
-            if(insideTriangle(i,j, t.v)){
+    for(int i=left;i<=right; ++i){
+        for(int j=bottom;j<=top; ++j){
+            for(int k = 0;k<4;++k){
+                float x = i + 0.25f;
+                float y = j + 0.25f;
+                if(k%2) x += 0.5f;
+                if(k>=2) y+= 0.5f;
 
-                auto[alpha, beta, gamma] = computeBarycentric2D(i, j, t.v);
-                float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-                float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
-                z_interpolated *= w_reciprocal;
+                if(insideTriangle(x, y, t.v)){
+                    auto [c1, c2, c3] = computeBarycentric2D(x, y, t.v);
+                    float w_reciprocal = 1.0/(c1 / v[0].w() + c2 / v[1].w() + c3 / v[2].w());
+                    float z_interpolated = c1 * v[0].z() / v[0].w() + c2 * v[1].z() / v[1].w() + c3 * v[2].z() / v[2].w();
+                    z_interpolated *= w_reciprocal;
 
-                int idx = (height-1-j)*width + i;
-                if(depth_buf.at(idx) > z_interpolated){
-                    set_pixel({(float)i, (float)j,0.0f},t.getColor());
-                    depth_buf[idx] = z_interpolated;
+
+                    int idx = (height*2-1-(j*2 + k/2))*width*2 + i*2 + k%2;
+                    if(super_depth_buf.at(idx) > z_interpolated){
+                        super_frame_buf[idx] = t.getColor();
+                        super_depth_buf[idx] = z_interpolated;
+                    }
+
                 }
-
+                
             }
         }
     }
@@ -178,10 +204,12 @@ void rst::rasterizer::clear(rst::Buffers buff)
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color)
     {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
+        std::fill(super_frame_buf.begin(), super_frame_buf.end(), Eigen::Vector3f{0, 0, 0});
     }
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth)
     {
         std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits<float>::infinity());
+        std::fill(super_depth_buf.begin(), super_depth_buf.end(), std::numeric_limits<float>::infinity());
     }
 }
 
@@ -189,6 +217,8 @@ rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 {
     frame_buf.resize(w * h);
     depth_buf.resize(w * h);
+    super_frame_buf.resize(w * h * 4);
+    super_depth_buf.resize(w * h * 4);
 }
 
 int rst::rasterizer::get_index(int x, int y)
