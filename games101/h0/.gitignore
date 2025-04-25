@@ -1,8 +1,0 @@
-.vs/
-.vscode/
-.idea/
-
-build/
-vcpkg_installed/
-vcpkg-configuration.json
-
