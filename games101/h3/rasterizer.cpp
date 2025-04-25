@@ -1,7 +1,7 @@
 //
 // Created by goksu on 4/6/19.
 //
-
+#include <iostream>
 #include <algorithm>
 #include "rasterizer.hpp"
 #include <opencv2/opencv.hpp>
@@ -259,6 +259,7 @@ static Eigen::Vector2f interpolate(float alpha, float beta, float gamma, const E
 //Screen space rasterization
 void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eigen::Vector3f, 3>& view_pos) 
 {
+
     // TODO: From your HW3, get the triangle rasterization code.
     auto v = t.toVector4();
     float left = std::min(v[0][0], std::min(v[1][0], v[2][0]));
@@ -274,41 +275,54 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
     // float Z = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
     // float zp = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
     // zp *= Z;
-    for(float i=int(left) + 0.5;i<=right; ++i){
-        for(float j=int(bottom) + 0.5;j<=top; ++j){
-            if(insideTriangle(x, y, t.v)){
-                auto [c1, c2, c3] = computeBarycentric2D(x, y, t.v);
+
+    for(float i=int(left);i<=right; i += 1.0f){
+        for(float j=int(bottom);j<=top; j += 1.0f){
+            if(insideTriangle(i, j, t.v)){
+                auto [c1, c2, c3] = computeBarycentric2D(i, j, t.v);
                 float Z = 1.0/(c1 / v[0].w() + c2 / v[1].w() + c3 / v[2].w());
                 float zp = c1 * v[0].z() / v[0].w() + c2 * v[1].z() / v[1].w() + c3 * v[2].z() / v[2].w();
                 zp *= Z;
+                // if(height-int(i)*width + int(j) < 0 || height-int(i)*width + int(j) >= width*height) continue;
                 if(zp > depth_buf[(height-int(i))*width + int(j)]) continue;
+
+
+
+                // TODO: Interpolate the attributes:
+                // auto interpolated_color
+                // auto interpolated_normal
+                // auto interpolated_texcoords
+                // auto interpolated_shadingcoords
+
+                // Use: fragment_shader_payload payload( interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
+                // Use: payload.view_pos = interpolated_shadingcoords;
+                // Use: Instead of passing the triangle's color directly to the frame buffer, pass the color to the shaders first to get the final color;
+                // Use: auto pixel_color = fragment_shader(payload);
                 
-                Eigen::Vector3f v_pos = c1 * view_pos[0] + c2 * view_pos[1] + c3 * view_pos[2];
-                v_pos *= Z;
+                Eigen::Vector3f interpolated_color = c1 * t.color[0] + c2 * t.color[1] + c3 * t.color[2];
+                interpolated_color *= Z;
+
+                Eigen::Vector3f interpolated_normal = c1 * t.normal[0] + c2 * t.normal[1] + c3 * t.normal[2];
+                interpolated_normal *= Z;
+
+                Eigen::Vector2f interpolated_texcoords = c1 * t.tex_coords[0] + c2 * t.tex_coords[1] + c3 * t.tex_coords[2];
+                interpolated_texcoords *= Z;
+
+            
+                Eigen::Vector3f interpolated_shadingcoords = c1 * view_pos[0] + c2 * view_pos[1] + c3 * view_pos[2];
+                interpolated_shadingcoords *= Z;
+
 
                 fragment_shader_payload payload( interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
                 payload.view_pos = interpolated_shadingcoords;
                 auto pixel_color = fragment_shader(payload);
 
 
-                set_pixel({x,y,0}, pixel_color);
+                depth_buf[(height-int(i))*width + int(j)] = zp;
+                set_pixel({(int)i,(int)j}, pixel_color);
             }
         }
     }
-
-
-
-    // TODO: Interpolate the attributes:
-    // auto interpolated_color
-    // auto interpolated_normal
-    // auto interpolated_texcoords
-    // auto interpolated_shadingcoords
-
-    // Use: fragment_shader_payload payload( interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
-    // Use: payload.view_pos = interpolated_shadingcoords;
-    // Use: Instead of passing the triangle's color directly to the frame buffer, pass the color to the shaders first to get the final color;
-    // Use: auto pixel_color = fragment_shader(payload);
-
  
 }
 
