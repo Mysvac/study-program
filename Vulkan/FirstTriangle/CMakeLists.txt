@@ -13,6 +13,8 @@ FILE(GLOB SRC_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan Vulkan::Headers)
+target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm-header-only)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+add_subdirectory(shaders) # 假设子目录叫 shaders
