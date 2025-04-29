@@ -24,7 +24,7 @@ class SocketServer
         {
             // 等待客户端连接
             TcpClient client = _listener.AcceptTcpClient();
-            Console.WriteLine("New client connected.");
+            Console.WriteLine("\n\nNew client connected.");
 
             // 开启子线程处理请求
             ThreadPool.QueueUserWorkItem(HandleClient, client);
@@ -40,7 +40,7 @@ class SocketServer
 
         try{
             // 读数据
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new ();
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0){
                 stringBuilder.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
                 if (bytesRead < buffer.Length) break; // 数据读取完毕
@@ -55,37 +55,15 @@ class SocketServer
             Console.WriteLine(jsonData.Type);
             // 操作
             if(jsonData.Type == "request" && jsonData.Args is not null){
-                jsonData.Result = "Unknown method.";
-                if(jsonData.Args.Count() == 0){
-                    jsonData.Result = "Lack of args.";
+                string response = "Unknown method.";
+                if(jsonData.Args.Count() == 0 || jsonData.Name is null){
+                    response = "Lack of args.";
                 }
-                else if(jsonData.Name == "fib"){
-                    try{
-                        int n = Convert.ToInt32(jsonData.Args[0]);
-                        jsonData.Result = Service.Fib(n).ToString();
-                    }catch(Exception){
-                        jsonData.Result = "Server handle Failed.";
-                    }
+                else {
+                    response = CommandHandler.ExecuteCommand(jsonData.Name, jsonData.Args);
                 }
-                else if(jsonData.Name == "sort"){
-                    try{
-                        int[] intArray = new int[jsonData.Args.Length];
-                        for (int i = 0; i < jsonData.Args.Length; i++){
-                            intArray[i] = int.Parse(jsonData.Args[i]);
-                        }
-                        Service.Sort(intArray);
-                        StringBuilder builder = new ();
-                        for (int i = 0; i < intArray.Length; i++){
-                            if(i != 0) builder.Append(", ");
-                            builder.Append(intArray[i].ToString());
-                        }
-                        jsonData.Result = buffer.ToString();
-                    }catch(Exception){
-                        jsonData.Result = "Server handle Failed.";
-                    }
-                }
-
-                byte[] jsonChars = JsonSerializer.SerializeToUtf8Bytes(jsonData);
+                Console.WriteLine("response: " + response);
+                byte[] jsonChars = Encoding.UTF8.GetBytes(response);
                 stream.Write(jsonChars, 0 ,jsonChars.Length);
             }
         }

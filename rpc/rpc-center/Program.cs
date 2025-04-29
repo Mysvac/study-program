@@ -6,14 +6,12 @@ class Program{
     public static Random Randomer = new Random();
 
     public static void Main(){
-
         LoadServers();
 
         var server = new SocketServer(18083);
         server.Start();
 
         SaveServers();
-
     }
 
     public static void SaveServers()
@@ -21,7 +19,7 @@ class Program{
         try
         {
             foreach( var it in ServerSet.Keys ){
-                if(ServerSet[it].time == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - ServerSet[it].time > 1000000000L){
+                if(ServerSet[it].Time == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - ServerSet[it].Time > 1800000L){
                     ServerSet.Remove(it);
                 }
             }
@@ -34,7 +32,8 @@ class Program{
             Console.WriteLine($"保存服务器数据时发生错误：{ex.Message}");
         }
     }
-        public static void LoadServers()
+
+    public static void LoadServers()
     {
         if (File.Exists(FilePath))
         {
@@ -43,7 +42,7 @@ class Program{
                 string json = File.ReadAllText(FilePath);
                 ServerSet = JsonSerializer.Deserialize<Dictionary<string, ServerModel>>(json) ?? new ();
                 foreach( var it in ServerSet.Keys ){
-                    if(ServerSet[it].time == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - ServerSet[it].time > 1000000000L){
+                    if(ServerSet[it].Time == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - ServerSet[it].Time > 1800000L){
                         ServerSet.Remove(it);
                     }
                 }

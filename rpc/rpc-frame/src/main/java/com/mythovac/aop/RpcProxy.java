@@ -1,13 +1,11 @@
 package com.mythovac.aop;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
 
 public class RpcProxy {
     public static <T> T createProxy(Class<T> targetClass, T targetInstance) {
@@ -46,14 +44,25 @@ public class RpcProxy {
         }
 
         private Object callRemoteMethod(String url, int port, Method method, Object[] args) {
-            // 转JSON数据
+            String server_url;
             String jsonData = String.format(
-                "{\"name\":\"%s\",\"type\":\"request\",\"args\":[%s],\"note\":\"\",\"result\":\"\"}",
-                method.getName(),
-                args.length == 0 ? "" : Arrays.stream(args)
-                    .map(arg -> "\"" + String.valueOf(arg) + "\"")
-                    .collect(Collectors.joining(","))
+                    "{\"name\":\"%s\",\"type\":\"request\",\"args\":[%s],\"note\":\"\",\"result\":\"\"}",
+                    method.getName(),
+                    args.length == 0 ? "" : Arrays.stream(args)
+                            .map(arg ->{
+                                if (arg instanceof Integer) {
+                                    return "\"" + ((int)arg) + "\"";
+                                }
+                                else if (arg instanceof int[]) {
+                                    return Arrays.stream((int[]) arg)
+                                            .mapToObj(num -> "\"" +num + "\"")
+                                            .collect(Collectors.joining(","));
+                                }
+                                return "\"\"";
+                            })
+                            .collect(Collectors.joining(","))
             );
+
 
             // 创建socket
             try (Socket socket = new Socket(url, port);
@@ -64,12 +73,23 @@ public class RpcProxy {
                 out.println(jsonData);
 
                 // 返回服务器的响应
-                return in.readLine();
-
+                server_url = in.readLine();
             } catch (IOException e) {
                 return "Failed to call remote method";
             }
+            String[] urls =  server_url.split(":");
+            try (Socket socket = new Socket(urls[0], Integer.parseInt(urls[1]));
+                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+            ) {
+                // 发送JSON数据
+                out.println(jsonData);
 
+                // 返回服务器的响应
+                return in.readLine();
+            } catch (IOException e) {
+                return "Failed to call remote method";
+            }
         }
     }
 }
